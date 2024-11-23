@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.36.4",
+    "elysia": "^1.1.25",
+    "mysql2": "^3.11.4"
+  }
+}
