@@ -1,0 +1,59 @@
+Cesta
+-	Producto{}
+-	Cantidad 
+-	Costo envio
+-	Costo total de producto
+-	Cantidad
+-	Fecha
+Pago
+-	Subtotal
+-	Gastos de envio
+-	Total estimado
+-	Método de pago{}
+-	Dirección {}
+Direccion de entrega:
+-	Pais
+-	Nombre de contacto
+-	Numero móvil
+-	Direccion
+-	Mas detalles
+-	Provincia
+-	Ciudad
+-	Codigo postal
+#establecer como dirección de envio predeterminada
+Metodos de envio
+-	Nombre
+-	Empresa
+-	Tiempo de entrega
+Metodos de pago
+Tarjeta
+-	Nuermo de tarjeta
+-	Nombre
+-	MM / YY
+-	CVV
+#guardar datos de tarjeta
+QR
+-	Imagen qr
+-	Monto
+-	Descripcoin
+-	Fecha
+Productos
+-	Nombre
+-	Descripción
+-	Detalle
+-	Stock
+-	imagen
+-	Método de envio
+Variante de producto
+-	Nombre
+-	Imagen
+Valoracion de producto
+-	Estrellas
+-	Compras totales
+Categoria
+-	Nombre
+Empleado
+-	Nomrbe 
+Cliente
+
+Usuario
