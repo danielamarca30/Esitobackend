@@ -1,0 +1,291 @@
+erDiagram
+    %% Tablas generales y avanzadas
+    CONFIGURACIONES {
+        int id PK
+        varchar clave UNIQUE
+        varchar valor
+        text descripcion
+        datetime actualizado_en
+    }
+    MENUS {
+        int id PK
+        varchar titulo
+        varchar url
+        int orden
+        int padre_id FK
+        varchar icono
+        boolean activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+    SLIDERS {
+        int id PK
+        varchar titulo
+        varchar descripcion
+        varchar imagen_url
+        varchar boton_texto
+        varchar boton_url
+        int orden
+        boolean activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+    PEDIDOS_SUPERVISADOS {
+        int id PK
+        int pedido_id FK
+        int empleado_id FK
+        text notas
+        datetime supervisado_en
+    }
+
+    %% Tablas de elementos gráficos
+    SECCIONES_INICIO {
+        int id PK
+        varchar titulo
+        varchar tipo ("slider", "productos", "categorias", "promociones")
+        text descripcion
+        int orden
+        boolean activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+    ITEMS_SECCION {
+        int id PK
+        int seccion_inicio_id FK
+        varchar titulo
+        varchar imagen_url
+        varchar link_url
+        int producto_id FK
+        boolean activo
+        int orden
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    %% Detalles adicionales a entidades principales
+    USUARIOS {
+        int id PK
+        varchar nombre
+        varchar email UNIQUE
+        varchar contraseña
+        varchar telefono
+        varchar direccion
+        int pais_id FK
+        int rol_id FK
+        datetime creado_en
+        datetime actualizado_en
+        text preferencias ("idioma", "tema oscuro")
+    }
+    PRODUCTOS {
+        int id PK
+        varchar nombre
+        text descripcion
+        decimal precio
+        int categoria_id FK
+        int marca_id FK
+        decimal descuento
+        int stock_total
+        boolean destacado
+        datetime creado_en
+        datetime actualizado_en
+    }
+    PRODUCTOS_RELACIONADOS {
+        int id PK
+        int producto_id FK
+        int relacionado_id FK
+        text tipo_relacion ("similar", "comprado_junto", "mismo_vendedor")
+    }
+    MARCAS {
+        int id PK
+        varchar nombre
+        text descripcion
+        varchar logo_url
+        datetime creado_en
+        datetime actualizado_en
+    }
+    IMAGENES_PRODUCTO {
+        int id PK
+        int producto_id FK
+        varchar url_imagen
+        text descripcion
+        boolean principal
+    }
+    ENVIOS {
+        int id PK
+        int pedido_id FK
+        varchar direccion
+        int pais_id FK
+        varchar estado_envio ("pendiente", "en tránsito", "entregado", "cancelado")
+        datetime enviado_en
+        datetime entregado_en
+    }
+    INVENTARIOS {
+        int id PK
+        int producto_id FK
+        varchar tipo_movimiento ("entrada", "salida")
+        int cantidad
+        text motivo
+        datetime registrado_en
+    }
+
+    %% Tablas avanzadas y optimizaciones
+    LOGS_EVENTOS {
+        int id PK
+        int usuario_id FK
+        varchar evento ("inicio_sesion", "registro", "cambio_datos", "compra_realizada")
+        text descripcion
+        datetime registrado_en
+    }
+    AUDITORIAS {
+        int id PK
+        varchar tabla
+        int registro_id
+        varchar accion ("insertar", "actualizar", "eliminar")
+        text cambios
+        int usuario_id FK
+        datetime realizado_en
+    }
+    CUENTA_CORRIENTE {
+        int id PK
+        int cliente_id FK
+        decimal saldo_actual
+        datetime actualizado_en
+    }
+    TRANSACCIONES_CUENTA {
+        int id PK
+        int cuenta_corriente_id FK
+        decimal monto
+        varchar tipo ("credito", "debito")
+        text descripcion
+        datetime registrado_en
+    }
+
+    %% RELACIONES
+    CONFIGURACIONES ||--o{ MENUS : "define menús"
+    MENUS ||--o{ MENUS : "submenús"
+    SLIDERS ||--o{ SECCIONES_INICIO : "pertenece a"
+    ITEMS_SECCION ||--|| SECCIONES_INICIO : "detalles"
+    USUARIOS ||--o{ LOGS_EVENTOS : "genera"
+    USUARIOS ||--o{ AUDITORIAS : "modifica registros"
+    CLIENTES ||--|| CUENTA_CORRIENTE : "tiene saldo"
+    CUENTA_CORRIENTE ||--o{ TRANSACCIONES_CUENTA : "registra movimientos"
+    PRODUCTOS ||--o{ PRODUCTOS_RELACIONADOS : "relacionados a"
+    PRODUCTOS ||--o{ IMAGENES_PRODUCTO : "tiene imágenes"
+    PEDIDOS ||--o{ PEDIDOS_SUPERVISADOS : "supervisado por"
+    ENVIOS ||--o{ PAISES : "destino en"
+    ITEMS_SECCION ||--o{ PRODUCTOS : "vinculado a"
+    SLIDERS ||--|| PRODUCTOS : "destacados en sliders"
+    EMPLEADOS ||--o{ PEDIDOS_SUPERVISADOS : "supervisa"
+    CLIENTES ||--o{ ENVIOS : "recibe en"
+
+
+
+
+
+
+
+
+erDiagram
+    USUARIOS ||--o{ PEDIDOS : realiza
+    USUARIOS ||--o{ USUARIOS_ROLES : tiene
+    ROLES ||--o{ USUARIOS_ROLES : asignado_a
+    CATEGORIAS ||--o{ PRODUCTOS : pertenece_a
+    CATEGORIAS ||--o{ CATEGORIAS : es_subcategoria_de
+    MARCAS ||--o{ PRODUCTOS : tiene
+    PRODUCTOS ||--o{ IMAGENES_PRODUCTOS : tiene
+    PRODUCTOS ||--o{ PEDIDOS : incluido_en
+    PEDIDOS ||--|| ESTADOS_PEDIDO : tiene
+    PEDIDOS ||--|| METODOS_PAGO : usa
+    PEDIDOS ||--o| ENVIOS : tiene
+    VARIANTES ||--o{ PRODUCTOS : aplica_a
+    MENU_SUPERIOR ||--o| CATEGORIAS : enlaza_a
+    SLIDER_INICIO ||--o| CATEGORIAS : relacionado_con
+
+    USUARIOS {
+        uuid id PK
+        string nombre_usuario
+        string contrasena
+        boolean esta_activo
+        boolean es_cliente
+    }
+    ROLES {
+        uuid id PK
+        string nombre
+        json permisos
+    }
+    USUARIOS_ROLES {
+        uuid id PK
+        uuid usuario_id FK
+        uuid rol_id FK
+    }
+    CATEGORIAS {
+        uuid id PK
+        uuid categoria_parent_id FK
+        string titulo
+        string seo
+        boolean esta_activo
+    }
+    PRODUCTOS {
+        uuid id PK
+        uuid categoria_id FK
+        uuid marca_id FK
+        string titulo
+        string seo
+        float precio
+        int cantidad
+    }
+    MARCAS {
+        uuid id PK
+        string titulo
+        string seo
+        boolean esta_activo
+    }
+    PEDIDOS {
+        uuid id PK
+        uuid cliente_id FK
+        uuid metodo_pago_id FK
+        uuid estado_pedido_id FK
+        uuid envio_id FK
+        float precio_total
+        json productos
+    }
+    ESTADOS_PEDIDO {
+        uuid id PK
+        string titulo
+        int orden
+    }
+    METODOS_PAGO {
+        uuid id PK
+        string titulo
+        boolean esta_activo
+    }
+    ENVIOS {
+        uuid id PK
+        string titulo
+        float precio
+    }
+    IMAGENES_PRODUCTOS {
+        uuid id PK
+        uuid producto_id FK
+        string imagen
+        int orden
+    }
+    VARIANTES {
+        uuid id PK
+        string nombre
+        json variantes
+    }
+    MENU_SUPERIOR {
+        uuid id PK
+        uuid categoria_id FK
+        string titulo
+        string seo
+        boolean esta_activo
+    }
+    SLIDER_INICIO {
+        uuid id PK
+        uuid categoria_id FK
+        string titulo
+        string imagen
+        boolean esta_activo
+    }
